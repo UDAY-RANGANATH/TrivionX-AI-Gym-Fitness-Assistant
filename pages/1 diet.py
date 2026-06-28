@@ -1,10 +1,86 @@
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
 import os
-from utils.llm import llm
+from PyPDF2 import PdfReader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 load_dotenv()
+
+def get_pdf_text(pdf_path):
+
+    text = ""
+
+    pdf_reader = PdfReader(pdf_path)
+
+    for page in pdf_reader.pages:
+
+        page_text = page.extract_text()
+
+        if page_text:
+            text += page_text
+
+    return text
+
+
+def get_text_chunks(text):
+
+    splitter = RecursiveCharacterTextSplitter(
+
+        chunk_size=10000,
+
+        chunk_overlap=1000
+
+    )
+
+    return splitter.split_text(text)
+
+
+def create_vector_store():
+
+    pdf_path = "assets/DIET.pdf"
+
+    text = get_pdf_text(pdf_path)
+
+    chunks = get_text_chunks(text)
+
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    db = FAISS.from_texts(
+        chunks,
+        embedding=embeddings
+    )
+
+    db.save_local("diet_index")
+
+if not os.path.exists("diet_index"):
+    create_vector_store()
+
+
+def search_pdf(question):
+
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    db = FAISS.load_local(
+        "diet_index",
+        embeddings,
+        allow_dangerous_deserialization=True
+    )
+
+    docs = db.similarity_search(question, k=5)
+
+    answer = ""
+
+    for doc in docs:
+        answer += doc.page_content
+        answer += "\n\n"
+
+    return answer
 
 def calculate_bmi(weight, height):
     height = height / 100
@@ -123,44 +199,54 @@ with col3:
     st.metric("Daily Calories", f"{daily_calories} kcal")
 
 st.divider()
-
-
 if st.button("Generate Diet Plan"):
-    
-    prompt = f"""
-    You are NOT allowed to create your own diet.
-    
-    You must ONLY recommend foods that are present
-    inside the Diet PDF knowledge and remove the items the user is allergic
-    
-    Non Veg Frequency : {nonveg_frequency}
-    
-    Food Allergies : {allergies}
-    
-    Daily Calories
-    
-    {daily_calories}
-        Keep it as short as possible so the user can understand easily with more options
 
-    If the requested diet cannot be found,
-    reply exactly:
-    
-    Diet not found in the knowledge base.
-    
-    refer the chatbot to modify the plan
-    Do not invent meals.
-    
-    Do not hallucinate.
-    
-    
-    Return the meals available in the PDF.
-    """
+    query = f"""
+Age: {age}
+Gender: {gender}
+Height: {height} cm
+Weight: {weight} kg
 
-    with st.spinner("Generating your personalized diet plan..."):
-        response = llm.invoke(prompt)
+Goal: {goal}
 
-        st.markdown(response.content)
+Food Preference: {food}
+
+Food Allergies: {allergies}
+
+Non-Vegetarian Frequency: {nonveg_frequency}
+
+Daily Calories: {daily_calories}
+
+Give ONLY 5 items as options of the diet available givr the name of food items only not ingredients in the PDF.
+
+keep it as short and simple as possible so that the user can understand easily
+
+Include:
+- Breakfast
+- Lunch
+- Dinner
+- Snacks
+
+Remove foods containing the allergies.
+
+If no suitable diet is found, reply:
+
+Diet not found in the knowledge base.
+"""
+
+    with st.spinner("Searching Diet Guide..."):
+
+        answer = search_pdf(query)
+
+        if answer.strip():
+            st.markdown(answer)
+        else:
+            st.warning(
+                "Diet not found in the knowledge base.\n\nPlease use the AI Chatbot for further assistance."
+            )
 
     st.success("Diet Plan Generated Successfully!")
 
-    st.info("If you want to make any custom modifications with the diet plan you can reachout our chabot and paste your given plan and modify it")
+    st.info(
+        "Need more changes? Copy this plan and ask the AI Chatbot to modify it."
+    )

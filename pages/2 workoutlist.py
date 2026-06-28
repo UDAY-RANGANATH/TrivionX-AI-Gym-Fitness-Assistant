@@ -6,9 +6,6 @@ from utils.llm import llm
 
 
 load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
-
-load_dotenv()
 api_key = os.getenv("GROQ_API_KEY")
 
 llm = ChatGroq(
@@ -100,69 +97,74 @@ duration = st.slider(
     60
 )
 
+physical_condition = st.radio(
+    "Are you physically handicapped?",
+    ["No", "Yes"]
+)
+
+disability = ""
+
+if physical_condition == "Yes":
+    disability = st.text_input(
+        "Please describe your physical condition",
+        placeholder="Example: Knee injury, Shoulder injury, Wheelchair user..."
+    )
 st.divider()
 
 if st.button("Generate a Workout Plan"):
 
     prompt = f"""
-You are a certified professional fitness trainer.
+    You are a certified fitness trainer.
+    
+    You are NOT allowed to invent workouts.
 
-Create a personalized weekly workout plan.
-
-User Details
-
-Age: {age}
-
-Gender: {gender}
-
-Height: {height} cm
-
-Weight: {weight} kg
-
-Fitness Goal: {goal}
-
-Experience Level: {experience}
-
-Workout Location: {location}
-
-Workout Days: {days}
-
-Workout Duration: {duration} minutes
-
-Generate the response in Markdown format.
-
-Include:
-
-# Weekly Workout Schedule
-
-For each workout day provide:
-
-• Target Muscle Group
-
-• Exercises
-
-• Sets
-
-• Repetitions
-
-• Rest Time
-
-• Warm-up
-
-• Cool-down
-
-Also include:
-
-## Cardio Recommendation
-
-## Stretching Routine
-
-## Recovery Tips
-
-## Beginner Safety Tips
-
-The exercises should match the user's experience level and available equipment.
-"""
+    Keep it as short and simple as possible and give the pro tip with it
+    
+    You must ONLY recommend workouts available in the Workout PDF knowledge base and do not talk about the pdf
+    
+    Workout Location : {location}
+    
+    Workout Days : {days}
+    
+    Workout Duration : {duration}
+    
+    Physically Handicapped : {physical_condition}
+    
+    Disability Details : {disability}
+    
+    Rules
+    
+    1. ONLY use workouts from the PDF.
+    
+    2. If the user is physically handicapped,
+    remove every exercise that targets the injured body part.
+    
+    3. Replace those exercises with safer alternatives
+    already available inside the PDF.
+    
+    4. If no safe alternative exists, reply
+    
+    "No suitable workout exists in the Workout Guide.
+    Please consult the AI Chatbot."
+    
+    Return
+    
+    Weekly Workout Schedule
+    
+    Warm-up
+    
+    Exercises
+    
+    Sets
+    
+    Reps
+    
+    Rest
+    
+    Cooldown
+    
+    Safety Tips
+    """
 
     with st.spinner("Creating your personalized workout plan..."):
 
@@ -172,4 +174,4 @@ The exercises should match the user's experience level and available equipment.
 
     st.success("Workout Plan Generated Successfully!")
 
-    st.markdown(response.content)
+    st.info("If you want to make any custom modifications with the wokrout plan you can reachout our chabot and paste your given plan and modify it")

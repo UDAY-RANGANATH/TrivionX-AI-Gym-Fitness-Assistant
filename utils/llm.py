@@ -1,21 +1,33 @@
-from pathlib import Path
+import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-import os
 
-env_path = Path(__file__).resolve().parent.parent / ".env"
+# Load local .env (works on your computer)
+load_dotenv()
 
-print("Looking for:", env_path)
-print("Exists:", env_path.exists())
+api_key = None
 
-load_dotenv(dotenv_path=env_path)
+# Try Streamlit Secrets first
+try:
+    import streamlit as st
+    if "GROQ_API_KEY" in st.secrets:
+        api_key = st.secrets["GROQ_API_KEY"]
+except Exception:
+    pass
 
-api_key = os.getenv("GROQ_API_KEY")
+# Fallback to local .env
+if api_key is None:
+    api_key = os.getenv("GROQ_API_KEY")
 
-print("API Key:", api_key)
+# Final check
+if not api_key:
+    raise ValueError(
+        "GROQ_API_KEY not found. Add it to Streamlit Secrets or your local .env file."
+    )
 
+# Initialize Groq LLM
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
-    api_key=api_key,
+    groq_api_key=api_key,
+    model_name="llama-3.3-70b-versatile",
     temperature=0.5,
 )

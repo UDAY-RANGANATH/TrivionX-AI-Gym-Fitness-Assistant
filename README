@@ -1,0 +1,305 @@
+# 🏋️ TrivionX – AI Gym & Fitness Assistant
+
+## 📌 Overview
+
+**TrivionX** is an AI-powered fitness assistant developed using **Python** and **Streamlit**. It provides users with personalized health insights, workout planning, diet recommendations, PDF-based knowledge retrieval, and fitness tracking through an interactive dashboard.
+
+The objective of this project is to provide a one-stop fitness companion that helps users achieve their health goals using Artificial Intelligence and data-driven recommendations.
+
+---
+
+# ✨ Features
+
+## 📏 BMI Calculator
+
+* Calculates Body Mass Index (BMI)
+* Displays BMI category
+* Provides daily calorie estimation
+
+---
+
+## 🥗 AI Dietician
+
+* Personalized Indian diet plans
+* Supports:
+
+  * Weight Loss
+  * Muscle Gain
+  * Weight Maintenance
+* Vegetarian and Non-Vegetarian options
+* Calculates recommended daily calories
+* Collects:
+
+  * Age
+  * Height
+  * Weight
+  * Gender
+  * Fitness Goal
+
+---
+
+## 💪 AI Workout Planner
+
+* Generates weekly workout schedules
+* Supports:
+
+  * Gym workouts
+  * Home workouts
+* Workout recommendations based on:
+
+  * Age
+  * Experience
+  * Goal
+  * Workout duration
+  * Workout days
+* Beginner, Intermediate and Advanced routines
+
+---
+
+## 🤖 AI Chatbot
+
+* Powered by **Groq Llama 3.3-70B**
+* Answers fitness and nutrition related questions
+* Provides workout and health guidance
+
+---
+
+## 📄 PDF Knowledge Assistant *(Optional Module)*
+
+* Upload fitness-related PDF documents
+* Search only within uploaded PDFs
+* Displays answers directly from PDF content
+* If information is unavailable, prompts the user to use the AI Chatbot
+
+---
+
+## 📊 Habit Tracker
+
+Track daily workouts including:
+
+* Workout type
+* Exercise
+* Sets
+* Repetitions
+* Weight lifted
+* Duration
+* Calories burned
+
+Displays:
+
+* Current streak
+* Total workouts
+* Workout completion percentage
+* Monthly calorie chart
+* Workout history
+
+---
+
+## 📈 Progress Dashboard
+
+Visualizes:
+
+* Calories burned
+* Workout distribution
+* Workout history
+* Monthly progress
+
+---
+
+# 🛠️ Technology Stack
+
+| Layer                 | Technology                                |
+| --------------------- | ----------------------------------------- |
+| Frontend              | Streamlit                                 |
+| Backend               | Python                                    |
+| AI Framework          | LangChain                                 |
+| LLM                   | Groq (Llama 3.3-70B Versatile)            |
+| Database              | SQLite                                    |
+| Visualization         | Plotly                                    |
+| PDF Processing        | PyPDF2                                    |
+| Vector Database       | FAISS                                     |
+| Embeddings            | Sentence Transformers / Google Embeddings |
+| Environment Variables | Python Dotenv                             |
+| Version Control       | Git & GitHub                              |
+
+---
+
+# 📂 Project Structure
+
+```text
+TrivionX/
+│
+├── App.py
+├── requirements.txt
+├── README.md
+├── .env
+│
+├── assets/
+│   ├── Logo.png
+│   └── Logo2.png
+│
+├── pages/
+│   ├── bmi.py
+│   ├── diet.py
+│   ├── workout.py
+│   ├── chatbot.py
+│   ├── tracker.py
+│   ├── workoutlist.py
+│   └── pdf_chatbot.py
+│
+├── utils/
+│   ├── llm.py
+│   └── ...
+│
+└── database.db
+```
+
+---
+
+# 🚀 Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/UDAY-RANGANATH/TrivionX-AI-Gym-Fitness-Assistant1.git
+```
+
+Navigate into the project
+
+```bash
+cd TrivionX-AI-Gym-Fitness-Assistant1
+```
+
+Create a virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate the environment
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 🔑 Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+---
+
+# ▶️ Run the Project
+
+```bash
+streamlit run App.py
+```
+
+---
+
+# 📷 Application Modules
+
+* 🏠 Home Dashboard
+* 📏 BMI Calculator
+* 🥗 AI Dietician
+* 💪 Workout Planner
+* 🤖 AI Chatbot
+* 📄 PDF Assistant
+* 📊 Habit Tracker
+
+---
+
+# 📊 Database
+
+SQLite database stores:
+
+* Daily workouts
+* Calories burned
+* Workout duration
+* Exercise history
+* Progress information
+
+---
+
+# 🎯 Future Enhancements
+
+* Webcam Exercise Counter using MediaPipe
+* Voice Assistant
+* Mobile Application
+* User Authentication
+* Smartwatch Integration
+* Wearable Device Support
+* AI Progress Prediction
+* Cloud Database
+* Personalized Fitness Reports (PDF)
+* Multi-language Support
+
+---
+
+# 📚 Libraries Used
+
+* streamlit
+* langchain
+* langchain-groq
+* python-dotenv
+* sqlite3
+* pandas
+* plotly
+* pillow
+* PyPDF2
+* faiss-cpu
+* sentence-transformers
+* reportlab
+
+---
+
+# 👨‍💻 Author
+
+**Uday Ranganath**
+
+B.Tech Student
+
+---
+
+# 📄 License
+
+This project is developed for educational and academic purposes.
+
+---
+
+# ⭐ Acknowledgements
+
+Special thanks to:
+
+* Streamlit
+* LangChain
+* Groq
+* Plotly
+* FAISS
+* PyPDF2
+* Python Community
+
+---
+
+## 🌟 TrivionX
+
+**"Your Personal AI Gym & Fitness Companion."**

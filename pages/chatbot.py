@@ -5,8 +5,6 @@ import os
 from PIL import Image
 from utils.llm import llm
 
-load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
 
 load_dotenv()
 
@@ -96,6 +94,8 @@ if user_input:
     4. Motivate the user.
     
     5. If asked about dangerous medical conditions, advise consulting a doctor.
+
+    6.Give the answer as simple as possible so that the user can understand quickly hence keep it short and simple
     
     Conversation:
     
@@ -116,7 +116,6 @@ if user_input:
 
             answer = response.content
 
-            st.markdown(answer)
 
     st.session_state.messages.append(
         {

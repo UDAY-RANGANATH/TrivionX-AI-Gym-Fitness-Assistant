@@ -5,17 +5,6 @@ import os
 from utils.llm import llm
 
 load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
-
-load_dotenv()
-
-api_key = os.getenv("GROQ_API_KEY")
-
-llm = ChatGroq(
-    groq_api_key=api_key,
-    model_name="llama-3.3-70b-versatile",
-    temperature=0.5
-)
 
 def calculate_bmi(weight, height):
     height = height / 100
@@ -96,6 +85,21 @@ food = st.radio(
     ]
 )
 
+allergies = st.text_input(
+    "Do you have any food allergies?",
+    placeholder="Example: Peanuts, Milk, Soy, Gluten, None"
+)
+
+nonveg_frequency = st.selectbox(
+    "How many days do you eat Non-Vegetarian food in a week?",
+    [
+        "0 Days",
+        "1-2 Days",
+        "3-4 Days",
+        "5-7 Days"
+    ]
+)
+
 bmi = calculate_bmi(weight, height)
 category = bmi_category(bmi)
 
@@ -110,73 +114,47 @@ daily_calories = calculate_calories(
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric("📏 BMI", bmi)
+    st.metric("BMI", bmi)
 
 with col2:
-    st.metric("🏷 BMI Category", category)
+    st.metric("BMI Category", category)
 
 with col3:
-    st.metric("🔥 Daily Calories", f"{daily_calories} kcal")
+    st.metric("Daily Calories", f"{daily_calories} kcal")
 
 st.divider()
 
 
 if st.button("Generate Diet Plan"):
-
+    
     prompt = f"""
-You are an expert dietician and nutritionist.
+    You are NOT allowed to create your own diet.
+    
+    You must ONLY recommend foods that are present
+    inside the Diet PDF knowledge and remove the items the user is allergic
+    
+    Non Veg Frequency : {nonveg_frequency}
+    
+    Food Allergies : {allergies}
+    
+    Daily Calories
+    
+    {daily_calories}
+        Keep it as short as possible so the user can understand easily with more options
 
-Generate a personalized Indian diet plan.
-
-User Details:
-
-Age: {age}
-
-Gender: {gender}
-
-Height: {height} cm
-
-Weight: {weight} kg
-
-BMI: {bmi}
-
-BMI Category: {category}
-
-Fitness Goal: {goal}
-
-Food Preference: {food}
-
-Recommended Daily Calories:
-{daily_calories} kcal
-
-Create the response in Markdown format.
-
-Include the following:
-
-## Daily Calories
-
-## Breakfast
-
-## Mid-Morning Snack
-
-## Lunch
-
-## Evening Snack
-
-## Dinner
-
-## Water Intake
-
-## Protein Intake
-
-## Grocery List
-
-## Foods to Avoid
-
-## Health Tips
-
-Make the diet practical, affordable and suitable for an Indian lifestyle.
-"""
+    If the requested diet cannot be found,
+    reply exactly:
+    
+    Diet not found in the knowledge base.
+    
+    refer the chatbot to modify the plan
+    Do not invent meals.
+    
+    Do not hallucinate.
+    
+    
+    Return the meals available in the PDF.
+    """
 
     with st.spinner("Generating your personalized diet plan..."):
         response = llm.invoke(prompt)
@@ -185,4 +163,4 @@ Make the diet practical, affordable and suitable for an Indian lifestyle.
 
     st.success("Diet Plan Generated Successfully!")
 
-    st.markdown(response.content)
+    st.info("If you want to make any custom modifications with the diet plan you can reachout our chabot and paste your given plan and modify it")

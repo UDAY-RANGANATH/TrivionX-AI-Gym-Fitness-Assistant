@@ -1,21 +1,21 @@
-from pathlib import Path
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 import os
 
-env_path = Path(__file__).resolve().parent.parent / ".env"
+# Load .env file
+load_dotenv()
 
-print("Looking for:", env_path)
-print("Exists:", env_path.exists())
-
-load_dotenv(dotenv_path=env_path)
-
+# Read API Key
 api_key = os.getenv("GROQ_API_KEY")
 
-print("API Key:", api_key)
+if api_key is None:
+    raise ValueError(
+        "GROQ_API_KEY not found. Please check your .env file."
+    )
 
+# Create LLM
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
-    api_key=api_key,
-    temperature=0.5,
+    groq_api_key=api_key,
+    model_name="llama-3.3-70b-versatile",
+    temperature=0.5
 )

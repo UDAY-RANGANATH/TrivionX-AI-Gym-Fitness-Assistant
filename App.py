@@ -38,7 +38,7 @@ if "username" not in st.session_state:
 
 if not st.session_state.logged_in:
 
-    st.title("🏋️ TrivionX Login")
+    st.title("TrivionX Login")
 
     tab1, tab2 = st.tabs(["Login", "Register"])
 
@@ -132,7 +132,7 @@ with col1:
     st.title("TrivionX Assistant")
 
     st.subheader(
-        f"Welcome {st.session_state.username} 👋"
+        f"Welcome {st.session_state.username} "
     )
 
 with col2:

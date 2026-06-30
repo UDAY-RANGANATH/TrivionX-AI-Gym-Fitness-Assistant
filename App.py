@@ -11,10 +11,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# -----------------------------
-# Database
-# -----------------------------
-
 conn = sqlite3.connect("database.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -27,17 +23,9 @@ CREATE TABLE IF NOT EXISTS Users(
 conn.commit()
 
 
-# -----------------------------
-# Password Hashing
-# -----------------------------
-
+# Password
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
-
-
-# -----------------------------
-# Session State
-# -----------------------------
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -46,9 +34,7 @@ if "username" not in st.session_state:
     st.session_state.username = ""
 
 
-# -----------------------------
 # Login / Register Page
-# -----------------------------
 
 if not st.session_state.logged_in:
 
@@ -56,7 +42,7 @@ if not st.session_state.logged_in:
 
     tab1, tab2 = st.tabs(["Login", "Register"])
 
-    # ---------------- LOGIN ----------------
+    #LOGIN 
 
     with tab1:
 
@@ -92,7 +78,7 @@ if not st.session_state.logged_in:
 
                 st.error("Invalid Username or Password")
 
-    # ---------------- REGISTER ----------------
+    # REGISTER 
 
     with tab2:
 
@@ -134,9 +120,8 @@ if not st.session_state.logged_in:
 
     st.stop()
 
-# ====================================================
 # MAIN APPLICATION
-# ====================================================
+
 
 logo_path = "assets/Logo.png"
 
